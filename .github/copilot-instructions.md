@@ -28,5 +28,6 @@ The server exposes the following tools via the Model Context Protocol:
 - Implement proper error handling for RSS feed operations
 - Ensure all MCP tools are properly documented
 - Maintain compatibility with the Model Context Protocol specification
+- The primary development environment is on Windows, using Powershell commands
 
 You can find more info and examples about MCP at https://modelcontextprotocol.io/llms-full.txt

@@ -7,8 +7,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "dev": "tsc -w & node --watch dist/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "tsc -w & node --watch dist/index.js"
   },
   "keywords": [
     "mcp",
@@ -16,8 +15,8 @@
     "rss",
     "feed"
   ],
-  "author": "",
-  "license": "ISC",
+  "author": "Ris Adams",
+  "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^0.4.0",
     "dotenv": "^16.4.5",

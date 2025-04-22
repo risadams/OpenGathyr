@@ -3,14 +3,14 @@ import * as sdk from "@modelcontextprotocol/sdk";
 import { z } from "zod";
 import { config } from "dotenv";
 import { RSSService } from "./services/rss-service.js";
-import { MCP_SERVER_CONFIG } from "./config/config.js";
+import { MCP_SERVER_CONFIG, loadRSSFeedsFromEnv } from "./config/config.js";
 import { RSSFeedConfig } from "./types/rss.js";
 
 // Load environment variables from .env file
 config();
 
-// Initialize the RSS service
-const rssService = new RSSService();
+// Initialize the RSS service with feeds from environment variables
+const rssService = new RSSService(loadRSSFeedsFromEnv());
 
 // Create MCP Server instance
 const server = new sdk.server.McpServer({

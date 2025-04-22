@@ -24,6 +24,7 @@
     // "noLib": true,                                    /* Disable including any library files, including the default lib.d.ts. */
     // "useDefineForClassFields": true,                  /* Emit ECMAScript-standard-compliant class fields. */
     // "moduleDetection": "auto",                        /* Control what method is used to detect module-format JS files. */
+    "isolatedModules": true,                            /* Ensure that each file can be safely transpiled without relying on other imports. */
 
     /* Modules */
     "module": "NodeNext",                                /* Specify what module code is generated. */

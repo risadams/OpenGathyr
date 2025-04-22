@@ -1,11 +1,9 @@
-version: '3.8'
-
 services:
   opengathyr-mcp:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: opengathyr-mcp
+    container_name: opengathyr
     environment:
       - NODE_ENV=production
     volumes:

@@ -68,9 +68,23 @@ The server can be configured using environment variables:
 
 - `MCP_SERVER_NAME`: Name of the MCP server
 - `MCP_SERVER_VERSION`: Version of the MCP server
-- `RSS_FEED_URLS`: Comma-separated list of RSS feed URLs to monitor
+- `RSS_FEED_URL_1`, `RSS_FEED_URL_2`, etc.: Individual RSS feed URLs (one URL per variable)
 - `RSS_REFRESH_INTERVAL`: Refresh interval in milliseconds (default: 300000 = 5 minutes)
 - `RSS_MAX_ITEMS`: Maximum number of items to keep per feed (default: 20)
+
+### Example .env file:
+```
+MCP_SERVER_NAME=opengathyr
+MCP_SERVER_VERSION=1.0.0
+
+# RSS Feed URLs - one per line
+RSS_FEED_URL_1=https://news.google.com/rss
+RSS_FEED_URL_2=https://example.com/feed.xml
+RSS_FEED_URL_3=https://another-site.org/rss
+
+RSS_REFRESH_INTERVAL=300000
+RSS_MAX_ITEMS=20
+```
 
 ## Available MCP Tools
 

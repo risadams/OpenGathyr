@@ -4,6 +4,35 @@ import { RSSFeedConfig } from '../types/rss.js';
 export const DEFAULT_REFRESH_INTERVAL = 300000; // 5 minutes in milliseconds
 export const DEFAULT_MAX_ITEMS = 20;
 
+// Function to load RSS feed URLs from environment variables
+export function loadRSSFeedsFromEnv(): RSSFeedConfig[] {
+  const feeds: RSSFeedConfig[] = [];
+  const refreshInterval = process.env.RSS_REFRESH_INTERVAL 
+    ? parseInt(process.env.RSS_REFRESH_INTERVAL, 10) 
+    : DEFAULT_REFRESH_INTERVAL;
+  const maxItems = process.env.RSS_MAX_ITEMS 
+    ? parseInt(process.env.RSS_MAX_ITEMS, 10) 
+    : DEFAULT_MAX_ITEMS;
+    
+  // Find all environment variables matching the pattern RSS_FEED_URL_*
+  Object.keys(process.env).forEach(key => {
+    if (key.match(/^RSS_FEED_URL_\d+$/)) {
+      const url = process.env[key];
+      if (url) {
+        const feedNumber = key.split('_').pop();
+        feeds.push({
+          name: `feed-${feedNumber}`,
+          url,
+          refreshInterval,
+          maxItems
+        });
+      }
+    }
+  });
+  
+  return feeds.length > 0 ? feeds : DEFAULT_FEEDS;
+}
+
 // Sample RSS feeds configuration
 // This can be overridden by environment variables or a config file
 export const DEFAULT_FEEDS: RSSFeedConfig[] = [
@@ -17,6 +46,6 @@ export const DEFAULT_FEEDS: RSSFeedConfig[] = [
 
 // MCP Server configuration
 export const MCP_SERVER_CONFIG = {
-  name: 'opengathyr-rss',
+  name: 'opengathyr',
   version: '1.0.0'
 };

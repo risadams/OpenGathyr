@@ -113,6 +113,9 @@ export class RSSService {
         });
     }, refreshInterval);
     
+    // Prevent the timer from keeping the process alive
+    intervalId.unref();
+    
     this.refreshIntervals.set(feedName, intervalId);
   }
 
