@@ -17,6 +17,10 @@
     "feed"
   ],
   "author": "Ris Adams",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/risadams/OpenGathyr.git"
+  },
   "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^0.4.0",
@@ -43,5 +47,9 @@
         "lines": 80
       }
     }
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "npm": ">=7.0.0"
   }
 }

@@ -13,40 +13,48 @@ OpenGathyr transforms how you manage content feeds by providing a centralized hu
 
 ### Key Features
 
-- **Centralized Feed Management**: Aggregate RSS/Atom feeds from multiple sources into a unified endpoint
-- **Customizable Processing Pipelines**: Apply filters, transformations, and enrichments to feed content
-- **Multi-Channel Distribution**: Deliver processed content to various destinations via APIs, webhooks, or custom integrations
-- **Rule-Based Automation**: Define conditional workflows to automate feed processing
-- **Plugin Support**: Extend functionality with a modular plugin architecture
-- **Developer-Friendly APIs**: Leverage REST and GraphQL APIs for seamless integration
-- **Live Content Streaming**: Enable real-time updates with WebSocket support
+- **MCP Tools Integration**: Expose RSS feed functionality through standardized Model Context Protocol tools
+- **Automated Feed Refreshing**: Configurable periodic fetching of RSS feeds to ensure fresh content
+- **Content Search**: Search across all RSS feeds with a unified query interface
+- **Feed Management**: Add, remove, and list RSS feeds dynamically
+- **Environment Configuration**: Easy setup using environment variables for feed sources and settings
+- **Docker Ready**: Containerized deployment support for both local and production environments
+- **Modular Architecture**: Cleanly separated components for easier maintenance and extensibility
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+
-- MongoDB 5+
-- Redis (optional, for caching)
+- Node.js 22.x or higher
+- npm 7.x or higher
+- Docker (optional, for containerized deployment)
 
 ### Installation
 
+1. Clone the repository:
+
 ```bash
-# Clone the repository
-git clone https://github.com/risadams/opengathyr.git
+git clone https://github.com/yourusername/opengathyr.git
 cd opengathyr
+```
 
-# Install dependencies
+2. Install dependencies:
+
+```bash
 npm install
+```
 
-# Configure environment
-cp .env.example .env
-# Edit .env with your settings
+3. Create a `.env` file with your configuration (see Configuration section)
 
-# Build the typescript project
-npm run build
+4. Start the server:
 
-# Start development server
+```bash
+npm start
+```
+
+For development with auto-reload:
+
+```bash
 npm run dev
 ```
 
@@ -72,7 +80,8 @@ The server can be configured using environment variables:
 - `RSS_REFRESH_INTERVAL`: Refresh interval in milliseconds (default: 300000 = 5 minutes)
 - `RSS_MAX_ITEMS`: Maximum number of items to keep per feed (default: 20)
 
-### Example .env file:
+### Example .env file
+
 ```
 MCP_SERVER_NAME=opengathyr
 MCP_SERVER_VERSION=1.0.0
@@ -133,25 +142,18 @@ Removes an RSS feed from monitoring.
 
 The project follows a modular architecture:
 
-- `src/index.ts`: Main entry point, sets up the MCP server and registers tools
-- `src/services/rss-service.ts`: Core service for RSS feed fetching and management
-- `src/config/config.ts`: Configuration management
-- `src/types/`: TypeScript type definitions
-
-## Documentation
-
-Full documentation is available at [docs.opengathyr.io](https://docs.opengathyr.io)
-
-- [API Reference](https://docs.opengathyr.io/api)
-- [Configuration Guide](https://docs.opengathyr.io/config)
-- [Plugin Development](https://docs.opengathyr.io/plugins)
+- `src/index.js`: Main entry point, sets up the MCP server and registers tools
+- `src/services/rss-service.js`: Core service for RSS feed fetching and management
+- `src/config/config.js`: Configuration management
+- `src/adapters/mcpSdkAdapter.js`: Custom Model Context Protocol SDK adapter
 
 ## Use Cases
 
-- **Content Curation**: Build automated content curation systems that gather and filter content from thousands of sources
-- **Data Pipeline**: Use as a flexible data ingestion layer for analytics systems
-- **Publishing Workflows**: Automate content publishing across multiple platforms
-- **News Aggregation**: Create personalized news services with smart filtering
+- **AI Assistants**: Integrate with LLM assistants via the Model Context Protocol to provide current news and information
+- **Content Aggregation**: Centralize multiple RSS feeds into a single accessible interface
+- **News Monitoring**: Track specific topics across multiple sources using the search functionality
+- **Headless CMS Integration**: Feed dynamic content into websites and applications
+- **Research Tools**: Collect and analyze content from multiple sources with a standardized API
 
 ## Contributing
 
@@ -160,9 +162,3 @@ Contributions are welcome! Please see our [Contributing Guide](CONTRIBUTING.md) 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Community
-
-- [Discord](https://discord.gg/opengathyr)
-- [Twitter](https://twitter.com/opengathyr)
-- [Community Forum](https://community.opengathyr.io)
