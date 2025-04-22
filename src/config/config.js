@@ -1,15 +1,22 @@
-import { RSSFeedConfig } from '../types/rss.js';
+/**
+ * config.js - Configuration management for OpenGathyr
+ */
+const dotenv = require('dotenv');
+
+// Load environment variables
+dotenv.config();
 
 // Default configuration for the RSS feeds
-export const DEFAULT_REFRESH_INTERVAL = 300000; // 5 minutes in milliseconds
-export const DEFAULT_MAX_ITEMS = 20;
+const DEFAULT_REFRESH_INTERVAL = 300000; // 5 minutes in milliseconds
+const DEFAULT_MAX_ITEMS = 20;
 
 // Function to load RSS feed URLs from environment variables
-export function loadRSSFeedsFromEnv(): RSSFeedConfig[] {
-  const feeds: RSSFeedConfig[] = [];
+function loadRSSFeedsFromEnv() {
+  const feeds = [];
   const refreshInterval = process.env.RSS_REFRESH_INTERVAL 
     ? parseInt(process.env.RSS_REFRESH_INTERVAL, 10) 
     : DEFAULT_REFRESH_INTERVAL;
+    
   const maxItems = process.env.RSS_MAX_ITEMS 
     ? parseInt(process.env.RSS_MAX_ITEMS, 10) 
     : DEFAULT_MAX_ITEMS;
@@ -35,7 +42,7 @@ export function loadRSSFeedsFromEnv(): RSSFeedConfig[] {
 
 // Sample RSS feeds configuration
 // This can be overridden by environment variables or a config file
-export const DEFAULT_FEEDS: RSSFeedConfig[] = [
+const DEFAULT_FEEDS = [
   {
     name: 'news',
     url: 'https://news.google.com/rss',
@@ -45,7 +52,15 @@ export const DEFAULT_FEEDS: RSSFeedConfig[] = [
 ];
 
 // MCP Server configuration
-export const MCP_SERVER_CONFIG = {
+const MCP_SERVER_CONFIG = {
   name: 'opengathyr',
   version: '1.0.0'
+};
+
+module.exports = {
+  DEFAULT_REFRESH_INTERVAL,
+  DEFAULT_MAX_ITEMS,
+  DEFAULT_FEEDS,
+  MCP_SERVER_CONFIG,
+  loadRSSFeedsFromEnv
 };

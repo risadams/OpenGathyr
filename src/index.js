@@ -1,19 +1,26 @@
-// Import the MCP SDK library
-import * as sdk from "@modelcontextprotocol/sdk";
-import { z } from "zod";
-import { config } from "dotenv";
-import { RSSService } from "./services/rss-service.js";
-import { MCP_SERVER_CONFIG, loadRSSFeedsFromEnv } from "./config/config.js";
-import { RSSFeedConfig } from "./types/rss.js";
+/**
+ * index.js - Main entry point for OpenGathyr MCP RSS Feed Server
+ * 
+ * This server uses the Model Context Protocol to provide RSS feed content
+ * to MCP clients like ChatGPT, Claude, and others.
+ */
 
-// Load environment variables from .env file
-config();
+// Import dependencies
+const { z } = require('zod');
+const { RSSService } = require('./services/rss-service');
+const { 
+  MCP_SERVER_CONFIG, 
+  loadRSSFeedsFromEnv 
+} = require('./config/config');
+
+// Use our custom MCP SDK adapter instead of the official one
+const mcpSdk = require('./adapters/mcpSdkAdapter');
 
 // Initialize the RSS service with feeds from environment variables
 const rssService = new RSSService(loadRSSFeedsFromEnv());
 
 // Create MCP Server instance
-const server = new sdk.server.McpServer({
+const server = new mcpSdk.server.McpServer({
   name: MCP_SERVER_CONFIG.name,
   version: MCP_SERVER_CONFIG.version,
   capabilities: {
@@ -29,7 +36,7 @@ server.tool(
   {
     feedName: z.string().describe("Name of the feed to retrieve"),
   },
-  async (params: { feedName: string }) => {
+  async (params) => {
     const feed = rssService.getFeed(params.feedName);
     
     if (!feed) {
@@ -65,7 +72,7 @@ server.tool(
   {
     query: z.string().describe("Search term to look for in feed titles and content"),
   },
-  async (params: { query: string }) => {
+  async (params) => {
     const results = rssService.searchFeeds(params.query);
     
     if (results.length === 0) {
@@ -139,9 +146,9 @@ server.tool(
     refreshInterval: z.number().optional().describe("Refresh interval in milliseconds (default: 300000)"),
     maxItems: z.number().optional().describe("Maximum number of items to keep (default: 20)"),
   },
-  async (params: { name: string; url: string; refreshInterval?: number; maxItems?: number }) => {
+  async (params) => {
     try {
-      const feedConfig: RSSFeedConfig = {
+      const feedConfig = {
         name: params.name,
         url: params.url,
         refreshInterval: params.refreshInterval,
@@ -163,7 +170,7 @@ server.tool(
         content: [
           {
             type: "text",
-            text: `Error adding feed: ${(error as Error).message}`,
+            text: `Error adding feed: ${error.message}`,
           },
         ],
       };
@@ -178,7 +185,7 @@ server.tool(
   {
     feedName: z.string().describe("Name of the feed to remove"),
   },
-  async (params: { feedName: string }) => {
+  async (params) => {
     try {
       rssService.removeFeed(params.feedName);
       
@@ -195,7 +202,7 @@ server.tool(
         content: [
           {
             type: "text",
-            text: `Error removing feed: ${(error as Error).message}`,
+            text: `Error removing feed: ${error.message}`,
           },
         ],
       };
@@ -204,7 +211,7 @@ server.tool(
 );
 
 // Set up the server transport
-const transport = new sdk.server.StdioServerTransport();
+const transport = new mcpSdk.server.StdioServerTransport();
 
 // Connect and run the server
 async function main() {

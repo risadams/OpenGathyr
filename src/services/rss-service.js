@@ -1,15 +1,18 @@
-import Parser from 'rss-parser';
-import { Feed, FeedItem, FeedsStore, RSSFeedConfig } from '../types/rss.js';
-import { DEFAULT_FEEDS, DEFAULT_MAX_ITEMS, DEFAULT_REFRESH_INTERVAL } from '../config/config.js';
+/**
+ * RSSService.js - Core service for RSS feed fetching and management
+ */
+const Parser = require('rss-parser');
 
-export class RSSService {
-  private parser: Parser;
-  private feeds: FeedsStore = {};
-  private feedConfigs: Map<string, RSSFeedConfig> = new Map();
-  private refreshIntervals: Map<string, NodeJS.Timeout> = new Map();
+// Default configuration
+const DEFAULT_REFRESH_INTERVAL = 300000; // 5 minutes in milliseconds
+const DEFAULT_MAX_ITEMS = 20;
 
-  constructor(feeds: RSSFeedConfig[] = DEFAULT_FEEDS) {
+class RSSService {
+  constructor(feeds = []) {
     this.parser = new Parser();
+    this.feeds = {};
+    this.feedConfigs = new Map();
+    this.refreshIntervals = new Map();
     
     // Initialize with the provided feeds
     feeds.forEach(feed => {
@@ -18,11 +21,11 @@ export class RSSService {
   }
 
   // Add a new feed to monitor
-  public addFeed(feedConfig: RSSFeedConfig): void {
+  addFeed(feedConfig) {
     const { name, url, refreshInterval = DEFAULT_REFRESH_INTERVAL, maxItems = DEFAULT_MAX_ITEMS } = feedConfig;
     
     if (this.feedConfigs.has(name)) {
-      console.warn(`Feed with name '${name}' already exists. Updating configuration.`);
+      console.error(`Feed with name '${name}' already exists. Updating configuration.`);
       this.stopFeedRefresh(name);
     }
     
@@ -36,7 +39,7 @@ export class RSSService {
     // Initial fetch
     this.fetchFeed(name)
       .then(() => {
-        console.log(`[RSSService] Successfully fetched feed: ${name}`);
+        console.error(`[RSSService] Successfully fetched feed: ${name}`);
       })
       .catch(error => {
         console.error(`[RSSService] Error fetching feed ${name}:`, error);
@@ -47,37 +50,37 @@ export class RSSService {
   }
 
   // Remove a feed from monitoring
-  public removeFeed(feedName: string): void {
+  removeFeed(feedName) {
     if (!this.feedConfigs.has(feedName)) {
-      console.warn(`No feed with name '${feedName}' found.`);
+      console.error(`No feed with name '${feedName}' found.`);
       return;
     }
     
     this.stopFeedRefresh(feedName);
     this.feedConfigs.delete(feedName);
     delete this.feeds[feedName];
-    console.log(`[RSSService] Feed '${feedName}' removed.`);
+    console.error(`[RSSService] Feed '${feedName}' removed.`);
   }
 
   // Get all feeds
-  public getAllFeeds(): FeedsStore {
+  getAllFeeds() {
     return { ...this.feeds };
   }
 
   // Get a specific feed by name
-  public getFeed(feedName: string): Feed | null {
+  getFeed(feedName) {
     return this.feeds[feedName] || null;
   }
 
   // Get items from a specific feed
-  public getFeedItems(feedName: string): FeedItem[] {
+  getFeedItems(feedName) {
     return this.feeds[feedName]?.items || [];
   }
 
   // Search across all feeds
-  public searchFeeds(query: string): FeedItem[] {
+  searchFeeds(query) {
     const lowercaseQuery = query.toLowerCase();
-    const results: FeedItem[] = [];
+    const results = [];
     
     Object.values(this.feeds).forEach(feed => {
       feed.items.forEach(item => {
@@ -95,12 +98,12 @@ export class RSSService {
   }
 
   // Start the refresh interval for a feed
-  private startFeedRefresh(feedName: string): void {
+  startFeedRefresh(feedName) {
     if (!this.feedConfigs.has(feedName)) {
       return;
     }
     
-    const { refreshInterval = DEFAULT_REFRESH_INTERVAL } = this.feedConfigs.get(feedName)!;
+    const { refreshInterval = DEFAULT_REFRESH_INTERVAL } = this.feedConfigs.get(feedName);
     
     // Clear any existing interval
     this.stopFeedRefresh(feedName);
@@ -120,26 +123,26 @@ export class RSSService {
   }
 
   // Stop the refresh interval for a feed
-  private stopFeedRefresh(feedName: string): void {
+  stopFeedRefresh(feedName) {
     if (this.refreshIntervals.has(feedName)) {
-      clearInterval(this.refreshIntervals.get(feedName)!);
+      clearInterval(this.refreshIntervals.get(feedName));
       this.refreshIntervals.delete(feedName);
     }
   }
 
   // Fetch and parse a feed
-  private async fetchFeed(feedName: string): Promise<void> {
+  async fetchFeed(feedName) {
     if (!this.feedConfigs.has(feedName)) {
       throw new Error(`No feed with name '${feedName}' found.`);
     }
     
-    const { url, maxItems = DEFAULT_MAX_ITEMS } = this.feedConfigs.get(feedName)!;
+    const { url, maxItems = DEFAULT_MAX_ITEMS } = this.feedConfigs.get(feedName);
     
     try {
       const parsedFeed = await this.parser.parseURL(url);
       
-      // Convert parser items to our FeedItem type
-      const items: FeedItem[] = parsedFeed.items.map(item => ({
+      // Convert parser items to our custom format
+      const items = parsedFeed.items.map(item => ({
         title: item.title || 'Untitled',
         link: item.link,
         content: item.content,
@@ -167,3 +170,9 @@ export class RSSService {
     }
   }
 }
+
+module.exports = {
+  RSSService,
+  DEFAULT_REFRESH_INTERVAL,
+  DEFAULT_MAX_ITEMS
+};
