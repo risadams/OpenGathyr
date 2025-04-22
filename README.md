@@ -1,85 +1,84 @@
-# Repo Template
+# OpenGathyr
 
-This repository is meant to serve as a general template for how to set up new repositories in the. In general, setting up a new repository should take only a few minutes; use this repository as a way of finding example files, and use the following checklist to ensure that you've set up the repository correctly.
+<img src="logo.svg" alt="OpenGathyr Logo" align="right" width="200" />
 
-## Install
+An open-source Model Context Protocol (MCP) server powered by RSS feeds.
 
-These instructions are basic; you can use any method to do this work. The important part is making sure that you follow the checklist below before publishing the repository.
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-```sh
-# Let's make a new folder
-mkdir new-repo && cd new-repo
-# Start a Git instance and copy over template files.
-git init
-cp ../repo-template/* .
+## What is OpenGathyr?
+
+OpenGathyr transforms how you manage content feeds by providing a centralized hub that collects, processes, and distributes RSS/Atom feeds. Unlike traditional aggregators, OpenGathyr functions as a complete Model Context Protocol (MCP) server for your feed ecosystem.
+
+### Key Features
+
+- **Centralized Feed Management**: Aggregate RSS/Atom feeds from multiple sources into a unified endpoint
+- **Customizable Processing Pipelines**: Apply filters, transformations, and enrichments to feed content
+- **Multi-Channel Distribution**: Deliver processed content to various destinations via APIs, webhooks, or custom integrations
+- **Rule-Based Automation**: Define conditional workflows to automate feed processing
+- **Plugin Support**: Extend functionality with a modular plugin architecture
+- **Developer-Friendly APIs**: Leverage REST and GraphQL APIs for seamless integration
+- **Live Content Streaming**: Enable real-time updates with WebSocket support
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+
+- MongoDB 5+
+- Redis (optional, for caching)
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/risadams/opengathyr.git
+cd opengathyr
+
+# Install dependencies
+npm install
+
+# Configure environment
+cp .env.example .env
+# Edit .env with your settings
+
+# Start development server
+npm run dev
 ```
 
-## Checklist
+### Quick Start Guide
 
-Go through this checklist after creating your repository. It should only take a couple of minutes.
+1. Add feed sources via the web interface or API
+2. Create processing rules to filter and transform content
+3. Configure output destinations
+4. Monitor your feed pipeline through the dashboard
 
-### README
+## Documentation
 
-- [ ] Update this `README.md` (Note, do last!).
-- [ ] Rename all instances of `<Replace Title>` in README to match the new repo title
-- [ ] Manually go through and edit the rest of the README.
+Full documentation is available at [docs.opengathyr.io](https://docs.opengathyr.io)
 
-### Other Files
+- [API Reference](https://docs.opengathyr.io/api)
+- [Configuration Guide](https://docs.opengathyr.io/config)
+- [Plugin Development](https://docs.opengathyr.io/plugins)
 
-- [ ] Copy `CODE_OF_CONDUCT.md` verbatim.
-- [ ] Copy `CONTRIBUTING.md` and ensure that you've added any repository-specific instructions. (Replace `<Replace Title>` again).
-- [ ] Should you have a `CHANGELOG.md`? Document your release process, if you plan on having one, in the `CONTRIBUTING.md` file.
+## Use Cases
 
-### Dotfiles
+- **Content Curation**: Build automated content curation systems that gather and filter content from thousands of sources
+- **Data Pipeline**: Use as a flexible data ingestion layer for analytics systems
+- **Publishing Workflows**: Automate content publishing across multiple platforms
+- **News Aggregation**: Create personalized news services with smart filtering
 
-- [ ] Do you need a `.gitignore` file?
-- [ ] Do you need an `.npmignore` file?
+## Contributing
 
-### Licenses
-
-- [ ] Copy the MIT license from the example repo.
-- [ ] Have you added `MIT` as the license in the `package.json`?
-- [ ] If you made changes, were these reflected in the last section of the README?
-
-### GitHub Metadata
-
-- [ ] Have you added a short description to the repository?
-  - [ ] Is the description matched in the byline under the title in the README?
-- [ ] Have you added topics to the GitHub repository?
-  - [ ] Have you added these topics as keywords in the `package.json`?
-
-### `package.json`
-
-- [ ] Is the `author` field correct?
-- [ ] Have you added `keywords`?
-- [ ] Are the `bugs` and `homepage` fields correct?
-- [ ] Have you added tests? Are they matched, here?
-- [ ] Have you added a `lint` command?
-
-### Tests
-
-- [ ] Are there automated tests?
-- [ ] ...for the browser as well?
-- [ ] Are those reflected in CI?
-- [ ] Bonus points: Using CircleCI workflows to segment tests?
-- [ ] Extra bonus points: Are you cross-testing dependencies?
-
-### Benchmarks
-
-- [ ] Are there benchmarks?
-- [ ] Did you run the benchmarks before / after the change or PR?
-
-### Examples
-
-- [ ] Is there an example folder with usage examples?
-- [ ] For the browser as well?
-
-## Contribute
-
-If you think this could be better, please [open an issue](https://github.com/risadams/<Replace Title>/issues/new)!
-
-Please note that all interactions in this organization fall under our [Code of Conduct](CODE_OF_CONDUCT.md).
+Contributions are welcome! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
 
 ## License
 
-[MIT](LICENSE) © 1996+ Ris Adams
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Community
+
+- [Discord](https://discord.gg/opengathyr)
+- [Twitter](https://twitter.com/opengathyr)
+- [Community Forum](https://community.opengathyr.io)

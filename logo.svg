@@ -1,0 +1,10 @@
+<svg width="1024" height="1024" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Hexagonal central hub -->
+  <polygon points="100,52 156,76 156,124 100,148 44,124 44,76" fill="#2D3047" stroke="#FF9F1C" stroke-width="4"/>
+
+  <!-- Flowing lines connecting to the hub -->
+  <path d="M0 60 C40 20 80 40 100 100" stroke="#3DCCC7" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M0 140 C40 180 80 160 100 100" stroke="#3DCCC7" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M200 60 C160 20 120 60 100 100" stroke="#3DCCC7" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M200 140 C160 180 120 140 100 100" stroke="#3DCCC7" stroke-width="5" fill="none" stroke-linecap="round"/>
+</svg>
