@@ -43,16 +43,86 @@ npm install
 cp .env.example .env
 # Edit .env with your settings
 
+# Build the typescript project
+npm run build
+
 # Start development server
 npm run dev
 ```
 
-### Quick Start Guide
+### Docker Deployment
 
-1. Add feed sources via the web interface or API
-2. Create processing rules to filter and transform content
-3. Configure output destinations
-4. Monitor your feed pipeline through the dashboard
+To run the server in a Docker container:
+
+```bash
+# Build the Docker image
+docker build -t opengathyr .
+
+# Run the container
+docker run -it opengathyr
+```
+
+## Configuration
+
+The server can be configured using environment variables:
+
+- `MCP_SERVER_NAME`: Name of the MCP server
+- `MCP_SERVER_VERSION`: Version of the MCP server
+- `RSS_FEED_URLS`: Comma-separated list of RSS feed URLs to monitor
+- `RSS_REFRESH_INTERVAL`: Refresh interval in milliseconds (default: 300000 = 5 minutes)
+- `RSS_MAX_ITEMS`: Maximum number of items to keep per feed (default: 20)
+
+## Available MCP Tools
+
+### get-feed
+
+Retrieves the content from a specific feed.
+
+**Parameters:**
+
+- `feedName`: Name of the feed to retrieve
+
+### search-feeds
+
+Searches across all configured feeds for matching content.
+
+**Parameters:**
+
+- `query`: Search term to look for in feed titles and content
+
+### list-feeds
+
+Lists all currently configured feeds and their details.
+
+**Parameters:** None
+
+### add-feed
+
+Adds a new RSS feed to be monitored.
+
+**Parameters:**
+
+- `name`: Identifier for the feed
+- `url`: URL of the RSS feed
+- `refreshInterval` (optional): Refresh interval in milliseconds
+- `maxItems` (optional): Maximum number of items to keep
+
+### remove-feed
+
+Removes an RSS feed from monitoring.
+
+**Parameters:**
+
+- `feedName`: Name of the feed to remove
+
+## Architecture
+
+The project follows a modular architecture:
+
+- `src/index.ts`: Main entry point, sets up the MCP server and registers tools
+- `src/services/rss-service.ts`: Core service for RSS feed fetching and management
+- `src/config/config.ts`: Configuration management
+- `src/types/`: TypeScript type definitions
 
 ## Documentation
 

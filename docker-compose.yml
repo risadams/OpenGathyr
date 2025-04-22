@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  opengathyr-mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: opengathyr-mcp
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./.env:/app/.env
+    restart: unless-stopped
