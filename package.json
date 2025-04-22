@@ -23,7 +23,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^0.4.0",
+    "@modelcontextprotocol/sdk": "^1.10.2",
     "dotenv": "^16.4.5",
     "node-fetch": "^3.3.2",
     "rss-parser": "^3.13.0",
