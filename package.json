@@ -32,7 +32,7 @@
   "devDependencies": {
     "jest": "^29.7.0",
     "nock": "^13.5.0",
-    "supertest": "^6.3.3"
+    "supertest": "^7.1.0"
   },
   "jest": {
     "testEnvironment": "node",
