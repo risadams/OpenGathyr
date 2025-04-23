@@ -16,7 +16,7 @@ export interface MCPCapabilities {
 
 export interface MCPToolDefinition {
   description: string;
-  params: any;
+  params: Record<string, unknown>;
 }
 
 export interface MCPResourceDefinition {
@@ -26,12 +26,12 @@ export interface MCPResourceDefinition {
 // MCP Request and Response types
 export interface MCPRequest {
   type: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface MCPResponse {
   type: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface MCPInitializeRequest extends MCPRequest {
@@ -58,12 +58,12 @@ export interface MCPCapabilitiesResponse extends MCPResponse {
 export interface MCPToolRequest extends MCPRequest {
   type: 'tool';
   name: string;
-  params: any;
+  params: Record<string, unknown>;
 }
 
 export interface MCPToolResponse extends MCPResponse {
   type: 'tool_result';
-  result: any;
+  result: unknown;
 }
 
 export interface MCPErrorResponse extends MCPResponse {
@@ -78,13 +78,13 @@ export interface JSONRPCRequest {
   jsonrpc: '2.0';
   id?: number | string;
   method: string;
-  params?: any;
+  params?: Record<string, unknown>;
 }
 
 export interface JSONRPCResponse {
   jsonrpc: '2.0';
   id?: number | string;
-  result?: any;
+  result?: unknown;
   error?: {
     code: number;
     message: string;
@@ -92,5 +92,5 @@ export interface JSONRPCResponse {
 }
 
 // Handler types
-export type ToolHandler = (params: any) => Promise<any>;
-export type ResourceHandler = (params: any) => Promise<any>;
+export type ToolHandler = (params: Record<string, unknown>) => Promise<unknown>;
+export type ResourceHandler = (params: Record<string, unknown>) => Promise<unknown>;

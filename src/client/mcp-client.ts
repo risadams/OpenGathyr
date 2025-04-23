@@ -10,7 +10,7 @@ import { EventEmitter } from 'events';
 export class McpClient extends EventEmitter {
   private serverProcess: ChildProcessWithoutNullStreams | null = null;
   private requestId = 0;
-  private requestCallbacks: Map<number, (response: McpResponse) => void> = new Map();
+  private requestCallbacks = new Map<number, (response: McpResponse) => void>();
   private isServerReady = false;
   private serverPath: string;
   
@@ -60,7 +60,7 @@ export class McpClient extends EventEmitter {
             this.emit('response', response);
           }
         }
-      } catch (err) {
+      } catch {
         const error = new Error(`Failed to parse server response: ${data.toString()}`);
         this.emit('error', error);
       }
@@ -98,7 +98,7 @@ export class McpClient extends EventEmitter {
    * @param params Parameters for the tool
    * @returns Promise resolving to the MCP response
    */
-  public async sendRequest(tool: string, params: Record<string, any> = {}): Promise<McpResponse> {
+  public async sendRequest(tool: string, params: Record<string, unknown> = {}): Promise<McpResponse> {
     if (!this.serverProcess || !this.isServerReady) {
       throw new Error('Server not ready. Call start() first.');
     }
@@ -115,7 +115,7 @@ export class McpClient extends EventEmitter {
       }
     };
 
-    return new Promise((resolve) => {
+    return new Promise<McpResponse>((resolve) => {
       this.requestCallbacks.set(id, resolve);
       this.serverProcess!.stdin.write(JSON.stringify(request) + '\n');
     });
@@ -184,7 +184,7 @@ if (require.main === module) {
   client.on('log', console.log);
   client.on('error', console.error);
   
-  (async () => {
+  (async (): Promise<void> => {
     try {
       await client.start();
       console.log('Sending list-feeds request to MCP server...');

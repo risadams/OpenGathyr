@@ -8,8 +8,8 @@
 import { EventEmitter } from 'events';
 import { 
   MCPRequest, MCPResponse, MCPInitializeResponse, MCPCapabilitiesResponse, 
-  MCPErrorResponse, MCPCapabilities, JSONRPCRequest, JSONRPCResponse,
-  ToolHandler, ResourceHandler, MCPToolDefinition, MCPResourceDefinition 
+  MCPErrorResponse, MCPCapabilities, JSONRPCResponse,
+  ToolHandler, ResourceHandler, MCPToolDefinition
 } from '../types/mcp';
 
 // Check if we're in a test environment
@@ -24,7 +24,7 @@ interface McpServerOptions {
 interface Tool {
   name: string;
   description: string;
-  params: any;
+  params: Record<string, unknown>;
   handler: ToolHandler;
 }
 
@@ -56,7 +56,7 @@ class McpServer {
     }
   }
 
-  tool(name: string, description: string, params: any, handler: ToolHandler): McpServer {
+  tool(name: string, description: string, params: Record<string, unknown>, handler: ToolHandler): McpServer {
     if (!isTestEnvironment) {
       console.error(`Registering tool: ${name}`);
     }

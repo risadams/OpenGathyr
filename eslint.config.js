@@ -1,14 +1,14 @@
-import globals from "globals";
-import tseslint from "typescript-eslint";
+const globals = require("globals");
+const tseslint = require("typescript-eslint");
 
-export default tseslint.config(
+module.exports = tseslint.config(
   {
     ignores: ["dist/**", "node_modules/**", "coverage/**"],
   },
   {
     languageOptions: {
       ecmaVersion: 2022,
-      sourceType: "module",
+      sourceType: "commonjs",
       globals: {
         ...globals.node,
         ...globals.jest,
@@ -27,7 +27,7 @@ export default tseslint.config(
     ],
     rules: {
       // Custom rules
-      "no-console": "warn",
+      "no-console": "off", // Disable console warnings for server application
       "@typescript-eslint/explicit-function-return-type": "warn",
       "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
       "@typescript-eslint/no-explicit-any": "warn",

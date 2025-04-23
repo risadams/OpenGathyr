@@ -8,14 +8,14 @@ export interface McpRequest {
   method: string;
   params: {
     name: string;
-    params: Record<string, any>;
+    params: Record<string, unknown>;
   };
 }
 
 export interface McpResponseContent {
   type: string;
   text?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface McpResponse {
@@ -23,11 +23,11 @@ export interface McpResponse {
   id: number;
   result?: {
     content: McpResponseContent[];
-    [key: string]: any;
+    [key: string]: unknown;
   };
   error?: {
     code: number;
     message: string;
-    [key: string]: any;
+    [key: string]: unknown;
   };
 }

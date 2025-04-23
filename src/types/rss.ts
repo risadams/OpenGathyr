@@ -30,6 +30,4 @@ export interface Feed {
   feedUrl: string;
 }
 
-export interface Feeds {
-  [feedName: string]: Feed;
-}
+export type Feeds = Record<string, Feed>;
