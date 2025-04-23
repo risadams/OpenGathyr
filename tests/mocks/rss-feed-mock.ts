@@ -45,7 +45,7 @@ const mockParserResponse = {
   items: mockRssFeed.items
 };
 
-module.exports = {
+export {
   mockRssFeed,
   mockParserResponse
 };

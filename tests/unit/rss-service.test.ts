@@ -1,8 +1,8 @@
 /**
  * Unit tests for RSSService
  */
-const { RSSService, DEFAULT_REFRESH_INTERVAL, DEFAULT_MAX_ITEMS } = require('../../src/services/rss-service');
-const { mockParserResponse } = require('../mocks/rss-feed-mock');
+import { RSSService, DEFAULT_REFRESH_INTERVAL, DEFAULT_MAX_ITEMS } from '../../src/services/rss-service';
+import { mockParserResponse } from '../mocks/rss-feed-mock';
 
 // Mock the rss-parser module
 jest.mock('rss-parser', () => {
@@ -19,7 +19,7 @@ jest.mock('rss-parser', () => {
 });
 
 describe('RSSService', () => {
-  let rssService;
+  let rssService: RSSService;
   
   beforeEach(() => {
     // Clear all mocks before each test
@@ -35,18 +35,18 @@ describe('RSSService', () => {
   afterEach(() => {
     // Cleanup intervals that might have been created
     if (rssService) {
-      const feedNames = Array.from(rssService.feedConfigs.keys());
+      const feedNames = Array.from(rssService['feedConfigs'].keys());
       feedNames.forEach(name => {
-        rssService.stopFeedRefresh(name);
+        rssService['stopFeedRefresh'](name);
       });
     }
   });
 
   describe('constructor', () => {
     it('should initialize with empty feeds when no feeds are provided', () => {
-      expect(rssService.feeds).toEqual({});
-      expect(rssService.feedConfigs.size).toBe(0);
-      expect(rssService.refreshIntervals.size).toBe(0);
+      expect(rssService['feeds']).toEqual({});
+      expect(rssService['feedConfigs'].size).toBe(0);
+      expect(rssService['refreshIntervals'].size).toBe(0);
     });
 
     it('should initialize with provided feeds', async () => {
@@ -60,9 +60,9 @@ describe('RSSService', () => {
       // Wait for async operations to complete
       await new Promise(resolve => setTimeout(resolve, 100));
       
-      expect(rssService.feedConfigs.size).toBe(2);
-      expect(rssService.feedConfigs.has('test1')).toBe(true);
-      expect(rssService.feedConfigs.has('test2')).toBe(true);
+      expect(rssService['feedConfigs'].size).toBe(2);
+      expect(rssService['feedConfigs'].has('test1')).toBe(true);
+      expect(rssService['feedConfigs'].has('test2')).toBe(true);
     });
   });
 
@@ -74,12 +74,12 @@ describe('RSSService', () => {
       // Wait for async operations to complete
       await new Promise(resolve => setTimeout(resolve, 100));
       
-      expect(rssService.feedConfigs.has('test')).toBe(true);
-      const config = rssService.feedConfigs.get('test');
+      expect(rssService['feedConfigs'].has('test')).toBe(true);
+      const config = rssService['feedConfigs'].get('test');
       expect(config.refreshInterval).toBe(DEFAULT_REFRESH_INTERVAL);
       expect(config.maxItems).toBe(DEFAULT_MAX_ITEMS);
-      expect(rssService.refreshIntervals.has('test')).toBe(true);
-      expect(rssService.feeds['test']).toBeDefined();
+      expect(rssService['refreshIntervals'].has('test')).toBe(true);
+      expect(rssService['feeds']['test']).toBeDefined();
     });
 
     it('should add a feed with custom settings', async () => {
@@ -95,7 +95,7 @@ describe('RSSService', () => {
       // Wait for async operations to complete
       await new Promise(resolve => setTimeout(resolve, 100));
       
-      const config = rssService.feedConfigs.get('custom');
+      const config = rssService['feedConfigs'].get('custom');
       expect(config.refreshInterval).toBe(60000);
       expect(config.maxItems).toBe(10);
     });
@@ -115,7 +115,7 @@ describe('RSSService', () => {
       // Wait for the second feed to be loaded
       await new Promise(resolve => setTimeout(resolve, 100));
       
-      expect(rssService.feedConfigs.get('test').url).toBe('https://example.com/rss2');
+      expect(rssService['feedConfigs'].get('test').url).toBe('https://example.com/rss2');
     });
   });
 
@@ -127,13 +127,13 @@ describe('RSSService', () => {
       // Wait for async operations to complete
       await new Promise(resolve => setTimeout(resolve, 100));
       
-      expect(rssService.feedConfigs.has('test')).toBe(true);
+      expect(rssService['feedConfigs'].has('test')).toBe(true);
       
       rssService.removeFeed('test');
       
-      expect(rssService.feedConfigs.has('test')).toBe(false);
-      expect(rssService.refreshIntervals.has('test')).toBe(false);
-      expect(rssService.feeds['test']).toBeUndefined();
+      expect(rssService['feedConfigs'].has('test')).toBe(false);
+      expect(rssService['refreshIntervals'].has('test')).toBe(false);
+      expect(rssService['feeds']['test']).toBeUndefined();
     });
 
     it('should handle removing a non-existent feed', () => {
@@ -214,9 +214,9 @@ describe('RSSService', () => {
       // The addFeed method already calls fetchFeed, so we'll call it again manually
       await rssService.fetchFeed('test');
       
-      expect(rssService.feeds['test']).toBeDefined();
-      expect(rssService.feeds['test'].title).toBe(mockParserResponse.title);
-      expect(rssService.feeds['test'].items.length).toBe(mockParserResponse.items.length);
+      expect(rssService['feeds']['test']).toBeDefined();
+      expect(rssService['feeds']['test'].title).toBe(mockParserResponse.title);
+      expect(rssService['feeds']['test'].items.length).toBe(mockParserResponse.items.length);
     });
 
     it('should limit the number of items based on maxItems', async () => {
@@ -231,7 +231,7 @@ describe('RSSService', () => {
       // Wait for async operations to complete
       await new Promise(resolve => setTimeout(resolve, 100));
       
-      expect(rssService.feeds['limited'].items.length).toBe(1);
+      expect(rssService['feeds']['limited'].items.length).toBe(1);
     });
 
     it('should handle errors when fetching a feed', async () => {

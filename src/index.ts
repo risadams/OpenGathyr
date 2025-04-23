@@ -1,26 +1,26 @@
 /**
- * index.js - Main entry point for OpenGathyr MCP RSS Feed Server
+ * index.ts - Main entry point for OpenGathyr MCP RSS Feed Server
  * 
  * This server uses the Model Context Protocol to provide RSS feed content
  * to MCP clients like ChatGPT, Claude, and others.
  */
 
 // Import dependencies
-const { z } = require('zod');
-const { RSSService } = require('./services/rss-service');
-const { 
+import { z } from 'zod';
+import { RSSService } from './services/rss-service';
+import { 
   MCP_SERVER_CONFIG, 
   loadRSSFeedsFromEnv 
-} = require('./config/config');
+} from './config/config';
 
-// Use our custom MCP SDK adapter instead of the official one
-const mcpSdk = require('./adapters/mcpSdkAdapter');
+// Use our custom MCP SDK adapter
+import { server as mcpSdk } from './adapters/mcpSdkAdapter';
 
 // Initialize the RSS service with feeds from environment variables
 const rssService = new RSSService(loadRSSFeedsFromEnv());
 
 // Create MCP Server instance
-const server = new mcpSdk.server.McpServer({
+const server = new mcpSdk.McpServer({
   name: MCP_SERVER_CONFIG.name,
   version: MCP_SERVER_CONFIG.version,
   capabilities: {
@@ -170,7 +170,7 @@ server.tool(
         content: [
           {
             type: "text",
-            text: `Error adding feed: ${error.message}`,
+            text: `Error adding feed: ${(error as Error).message}`,
           },
         ],
       };
@@ -202,7 +202,7 @@ server.tool(
         content: [
           {
             type: "text",
-            text: `Error removing feed: ${error.message}`,
+            text: `Error removing feed: ${(error as Error).message}`,
           },
         ],
       };
@@ -211,13 +211,27 @@ server.tool(
 );
 
 // Set up the server transport
-const transport = new mcpSdk.server.StdioServerTransport();
+const transport = new mcpSdk.StdioServerTransport();
 
 // Connect and run the server
 async function main() {
   try {
+    // Set up error handlers for the process
+    process.on('uncaughtException', (error) => {
+      console.error('Uncaught exception:', error);
+    });
+    
+    process.on('unhandledRejection', (reason, promise) => {
+      console.error('Unhandled rejection at:', promise, 'reason:', reason);
+    });
+    
+    // Connect the server to the transport
+    console.error('Starting OpenGathyr MCP RSS Feed Server...');
     await server.connect(transport);
-    console.error("RSS Feed MCP Server running on stdio");
+    console.error('RSS Feed MCP Server running on stdio');
+    
+    // Keep the process alive until explicitly terminated
+    process.stdin.resume();
   } catch (error) {
     console.error("Error starting RSS Feed MCP Server:", error);
     process.exit(1);

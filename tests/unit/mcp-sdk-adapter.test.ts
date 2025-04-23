@@ -1,16 +1,16 @@
 /**
  * Unit tests for MCP SDK adapter
  */
-const EventEmitter = require('events');
-const mcpSdk = require('../../src/adapters/mcpSdkAdapter');
+import { EventEmitter } from 'events';
+import { server as mcpSdk } from '../../src/adapters/mcpSdkAdapter';
 
 describe('MCP SDK Adapter', () => {
   describe('McpServer', () => {
-    let server;
+    let server: any;
     
     beforeEach(() => {
       // Create a test server
-      server = new mcpSdk.server.McpServer({
+      server = new mcpSdk.McpServer({
         name: 'test-server',
         version: '1.0.0',
         capabilities: {
@@ -56,9 +56,9 @@ describe('MCP SDK Adapter', () => {
   });
   
   describe('StdioServerTransport', () => {
-    let transport;
-    let mockStdin;
-    let mockStdout;
+    let transport: any;
+    let mockStdin: any;
+    let mockStdout: any;
     
     beforeEach(() => {
       // Create mock stdin/stdout
@@ -67,6 +67,8 @@ describe('MCP SDK Adapter', () => {
         EventEmitter.prototype.on.call(mockStdin, event, callback);
         return mockStdin;
       });
+      mockStdin.setEncoding = jest.fn();
+      mockStdin.resume = jest.fn();
       
       mockStdout = {
         write: jest.fn()
@@ -77,10 +79,10 @@ describe('MCP SDK Adapter', () => {
       jest.spyOn(process, 'stdout', 'get').mockReturnValue(mockStdout);
       
       // Spy on console.error but don't mock its implementation
-      jest.spyOn(console, 'error');
+      jest.spyOn(console, 'error').mockImplementation(() => {});
       
       // Create transport
-      transport = new mcpSdk.server.StdioServerTransport();
+      transport = new mcpSdk.StdioServerTransport();
     });
     
     afterEach(() => {
@@ -90,6 +92,8 @@ describe('MCP SDK Adapter', () => {
     
     it('should initialize correctly and set up stdin handlers', () => {
       expect(mockStdin.on).toHaveBeenCalledWith('data', expect.any(Function));
+      expect(mockStdin.setEncoding).toHaveBeenCalledWith('utf8');
+      expect(mockStdin.resume).toHaveBeenCalled();
     });
     
     it('should emit request events when receiving JSON messages', () => {

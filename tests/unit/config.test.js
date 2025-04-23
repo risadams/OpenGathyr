@@ -1,13 +1,13 @@
 /**
  * Unit tests for Configuration module
  */
-const {
+import {
   DEFAULT_REFRESH_INTERVAL,
   DEFAULT_MAX_ITEMS,
   DEFAULT_FEEDS,
   MCP_SERVER_CONFIG,
   loadRSSFeedsFromEnv
-} = require('../../src/config/config');
+} from '../../src/config/config';
 
 describe('Configuration Module', () => {
   // Save original process.env

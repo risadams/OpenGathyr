@@ -1,14 +1,20 @@
 /**
- * RSSService.js - Core service for RSS feed fetching and management
+ * RSSService.ts - Core service for RSS feed fetching and management
  */
-const Parser = require('rss-parser');
+import Parser from 'rss-parser';
+import { Feed, FeedConfig, FeedItem, Feeds } from '../types/rss';
 
 // Default configuration
-const DEFAULT_REFRESH_INTERVAL = 300000; // 5 minutes in milliseconds
-const DEFAULT_MAX_ITEMS = 20;
+export const DEFAULT_REFRESH_INTERVAL = 300000; // 5 minutes in milliseconds
+export const DEFAULT_MAX_ITEMS = 20;
 
-class RSSService {
-  constructor(feeds = []) {
+export class RSSService {
+  private parser: Parser;
+  private feeds: Feeds;
+  private feedConfigs: Map<string, FeedConfig>;
+  private refreshIntervals: Map<string, NodeJS.Timeout>;
+  
+  constructor(feeds: FeedConfig[] = []) {
     this.parser = new Parser();
     this.feeds = {};
     this.feedConfigs = new Map();
@@ -21,7 +27,7 @@ class RSSService {
   }
 
   // Add a new feed to monitor
-  addFeed(feedConfig) {
+  public addFeed(feedConfig: FeedConfig): void {
     const { name, url, refreshInterval = DEFAULT_REFRESH_INTERVAL, maxItems = DEFAULT_MAX_ITEMS } = feedConfig;
     
     if (this.feedConfigs.has(name)) {
@@ -50,7 +56,7 @@ class RSSService {
   }
 
   // Remove a feed from monitoring
-  removeFeed(feedName) {
+  public removeFeed(feedName: string): void {
     if (!this.feedConfigs.has(feedName)) {
       console.error(`No feed with name '${feedName}' found.`);
       return;
@@ -63,24 +69,24 @@ class RSSService {
   }
 
   // Get all feeds
-  getAllFeeds() {
+  public getAllFeeds(): Feeds {
     return { ...this.feeds };
   }
 
   // Get a specific feed by name
-  getFeed(feedName) {
+  public getFeed(feedName: string): Feed | null {
     return this.feeds[feedName] || null;
   }
 
   // Get items from a specific feed
-  getFeedItems(feedName) {
+  public getFeedItems(feedName: string): FeedItem[] {
     return this.feeds[feedName]?.items || [];
   }
 
   // Search across all feeds
-  searchFeeds(query) {
+  public searchFeeds(query: string): FeedItem[] {
     const lowercaseQuery = query.toLowerCase();
-    const results = [];
+    const results: FeedItem[] = [];
     
     Object.values(this.feeds).forEach(feed => {
       feed.items.forEach(item => {
@@ -98,12 +104,12 @@ class RSSService {
   }
 
   // Start the refresh interval for a feed
-  startFeedRefresh(feedName) {
+  private startFeedRefresh(feedName: string): void {
     if (!this.feedConfigs.has(feedName)) {
       return;
     }
     
-    const { refreshInterval = DEFAULT_REFRESH_INTERVAL } = this.feedConfigs.get(feedName);
+    const { refreshInterval = DEFAULT_REFRESH_INTERVAL } = this.feedConfigs.get(feedName)!;
     
     // Clear any existing interval
     this.stopFeedRefresh(feedName);
@@ -123,26 +129,26 @@ class RSSService {
   }
 
   // Stop the refresh interval for a feed
-  stopFeedRefresh(feedName) {
+  private stopFeedRefresh(feedName: string): void {
     if (this.refreshIntervals.has(feedName)) {
-      clearInterval(this.refreshIntervals.get(feedName));
+      clearInterval(this.refreshIntervals.get(feedName)!);
       this.refreshIntervals.delete(feedName);
     }
   }
 
   // Fetch and parse a feed
-  async fetchFeed(feedName) {
+  public async fetchFeed(feedName: string): Promise<void> {
     if (!this.feedConfigs.has(feedName)) {
       throw new Error(`No feed with name '${feedName}' found.`);
     }
     
-    const { url, maxItems = DEFAULT_MAX_ITEMS } = this.feedConfigs.get(feedName);
+    const { url, maxItems = DEFAULT_MAX_ITEMS } = this.feedConfigs.get(feedName)!;
     
     try {
       const parsedFeed = await this.parser.parseURL(url);
       
       // Convert parser items to our custom format
-      const items = parsedFeed.items.map(item => ({
+      const items: FeedItem[] = parsedFeed.items.map(item => ({
         title: item.title || 'Untitled',
         link: item.link,
         content: item.content,
@@ -170,9 +176,3 @@ class RSSService {
     }
   }
 }
-
-module.exports = {
-  RSSService,
-  DEFAULT_REFRESH_INTERVAL,
-  DEFAULT_MAX_ITEMS
-};
