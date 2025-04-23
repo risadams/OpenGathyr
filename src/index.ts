@@ -222,7 +222,7 @@ server.tool(
 const transport = new mcpSdk.StdioServerTransport();
 
 // Connect and run the server
-async function main(): Promise<void> {
+export async function main(): Promise<void> {
   try {
     // Set up error handlers for the process
     process.on('uncaughtException', (error) => {
@@ -246,4 +246,5 @@ async function main(): Promise<void> {
   }
 }
 
+// Call main() when this module is executed directly
 main();
