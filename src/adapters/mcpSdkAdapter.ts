@@ -195,12 +195,18 @@ class McpServer {
             };
           }
         } else if (request.type === 'tool') {
+          if (typeof request.name !== 'string') {
+            throw new Error('Tool name must be a string');
+          }
+          
           const tool = this.tools[request.name];
           if (!tool) {
             throw new Error(`Tool not found: ${request.name}`);
           }
 
-          const result = await tool.handler(request.params || {});
+          // Create a properly typed empty params object if none provided
+          const params: Record<string, unknown> = request.params ? { ...request.params } : {};
+          const result = await tool.handler(params);
           
           // Add JSON-RPC properties if needed
           if (request.jsonrpc === '2.0') {
@@ -217,12 +223,18 @@ class McpServer {
             };
           }
         } else if (request.type === 'resource') {
+          if (typeof request.name !== 'string') {
+            throw new Error('Resource name must be a string');
+          }
+          
           const resource = this.resources[request.name];
           if (!resource) {
             throw new Error(`Resource not found: ${request.name}`);
           }
 
-          const result = await resource.handler(request.params || {});
+          // Create a properly typed empty params object if none provided
+          const params: Record<string, unknown> = request.params ? { ...request.params } : {};
+          const result = await resource.handler(params);
           
           // Add JSON-RPC properties if needed
           if (request.jsonrpc === '2.0') {
@@ -438,7 +450,8 @@ class StdioServerTransport extends EventEmitter {
         
         // Extract the request ID if it was passed in the original message
         if ('jsonrpc' in message && 'id' in message) {
-          jsonrpcMessage.id = message.id;
+          // Use string assertion to handle ID which could be string, number, or undefined
+          jsonrpcMessage.id = message.id as string | number | undefined;
         }
         
         // Convert different MCP message types to JSON-RPC

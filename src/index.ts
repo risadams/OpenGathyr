@@ -10,7 +10,8 @@ import { z } from 'zod';
 import { RSSService } from './services/rss-service';
 import { 
   MCP_SERVER_CONFIG, 
-  loadRSSFeedsFromEnv 
+  loadRSSFeedsFromEnv,
+  FeedConfig
 } from './config/config';
 
 // Use our custom MCP SDK adapter
@@ -37,14 +38,16 @@ server.tool(
     feedName: z.string().describe("Name of the feed to retrieve"),
   },
   async (params) => {
-    const feed = rssService.getFeed(params.feedName);
+    // Type assertion for the feedName parameter
+    const feedName = params.feedName as string;
+    const feed = rssService.getFeed(feedName);
     
     if (!feed) {
       return {
         content: [
           {
             type: "text",
-            text: `Feed '${params.feedName}' not found. Available feeds: ${Object.keys(rssService.getAllFeeds()).join(", ")}`,
+            text: `Feed '${feedName}' not found. Available feeds: ${Object.keys(rssService.getAllFeeds()).join(", ")}`,
           },
         ],
       };
@@ -73,14 +76,16 @@ server.tool(
     query: z.string().describe("Search term to look for in feed titles and content"),
   },
   async (params) => {
-    const results = rssService.searchFeeds(params.query);
+    // Type assertion for the query parameter
+    const query = params.query as string;
+    const results = rssService.searchFeeds(query);
     
     if (results.length === 0) {
       return {
         content: [
           {
             type: "text",
-            text: `No results found for search term: "${params.query}"`,
+            text: `No results found for search term: "${query}"`,
           },
         ],
       };
@@ -94,7 +99,7 @@ server.tool(
       content: [
         {
           type: "text",
-          text: `# Search Results for: "${params.query}"\n\nFound ${results.length} matching items\n\n${formattedResults.join('')}`,
+          text: `# Search Results for: "${query}"\n\nFound ${results.length} matching items\n\n${formattedResults.join('')}`,
         },
       ],
     };
@@ -148,11 +153,12 @@ server.tool(
   },
   async (params) => {
     try {
-      const feedConfig = {
-        name: params.name,
-        url: params.url,
-        refreshInterval: params.refreshInterval,
-        maxItems: params.maxItems,
+      // Create properly typed feedConfig
+      const feedConfig: FeedConfig = {
+        name: params.name as string,
+        url: params.url as string,
+        refreshInterval: params.refreshInterval as number | undefined,
+        maxItems: params.maxItems as number | undefined,
       };
       
       rssService.addFeed(feedConfig);
@@ -161,7 +167,7 @@ server.tool(
         content: [
           {
             type: "text",
-            text: `Successfully added feed: ${params.name}\nURL: ${params.url}`,
+            text: `Successfully added feed: ${feedConfig.name}\nURL: ${feedConfig.url}`,
           },
         ],
       };
@@ -187,13 +193,15 @@ server.tool(
   },
   async (params) => {
     try {
-      rssService.removeFeed(params.feedName);
+      // Type assertion for the feedName parameter
+      const feedName = params.feedName as string;
+      rssService.removeFeed(feedName);
       
       return {
         content: [
           {
             type: "text",
-            text: `Successfully removed feed: ${params.feedName}`,
+            text: `Successfully removed feed: ${feedName}`,
           },
         ],
       };

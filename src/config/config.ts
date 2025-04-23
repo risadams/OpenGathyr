@@ -5,6 +5,9 @@ import dotenv from 'dotenv';
 import { FeedConfig } from '../types/rss';
 import { MCPServerConfig } from '../types/mcp';
 
+// Re-export FeedConfig type for use in other modules
+export type { FeedConfig };
+
 // Load environment variables
 dotenv.config();
 
