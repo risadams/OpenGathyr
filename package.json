@@ -11,7 +11,8 @@
     "test:watch": "jest --watch --detectOpenHandles",
     "test:coverage": "jest --coverage --detectOpenHandles",
     "lint": "eslint src/**/*.ts",
-    "format": "prettier --write \"src/**/*.ts\""
+    "format": "prettier --write \"src/**/*.ts\"",
+    "client": "ts-node src/client/mcp-client.ts"
   },
   "keywords": [
     "mcp",

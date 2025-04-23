@@ -46,7 +46,13 @@ npm install
 
 3. Create a `.env` file with your configuration (see Configuration section)
 
-4. Start the server:
+4. Build the project:
+
+```bash
+npm run build
+```
+
+5. Start the server:
 
 ```bash
 npm start
@@ -138,14 +144,69 @@ Removes an RSS feed from monitoring.
 
 - `feedName`: Name of the feed to remove
 
-## Architecture
+## Using the MCP Client
 
-The project follows a modular architecture:
+OpenGathyr includes a simple MCP client (`src/client/mcp-client.ts`) that can be used to interact with the MCP server for testing purposes.
 
-- `src/index.js`: Main entry point, sets up the MCP server and registers tools
-- `src/services/rss-service.js`: Core service for RSS feed fetching and management
-- `src/config/config.js`: Configuration management
-- `src/adapters/mcpSdkAdapter.js`: Custom Model Context Protocol SDK adapter
+### Running the Client
+
+Ensure the MCP server is not already running on the same port, then execute the client with:
+
+```bash
+npm run client
+```
+
+### How It Works
+
+The client:
+
+1. Spawns a new instance of the MCP server as a child process
+2. Sends a request to the `list-feeds` tool
+3. Displays the formatted response
+4. Automatically terminates the server after receiving the response
+
+### Modifying the Client
+
+You can easily modify the client to test other MCP tools:
+
+```javascript
+// Change the request to use a different tool
+const request = {
+  jsonrpc: '2.0',
+  id: 1,
+  method: 'tool',
+  params: {
+    name: 'get-feed',  // Change to any of the available tools
+    params: {
+      feedName: 'example-feed'  // Add required parameters for the tool
+    }
+  }
+};
+```
+
+Available tools you can test:
+
+- `list-feeds`: Lists all configured feeds (no parameters needed)
+- `get-feed`: Gets content from a specific feed (requires `feedName` parameter)
+- `search-feeds`: Searches across feeds (requires `query` parameter)
+- `add-feed`: Adds a new feed (requires `name` and `url` parameters)
+- `remove-feed`: Removes a feed (requires `feedName` parameter)
+
+Example for searching feeds:
+
+```javascript
+const request = {
+  jsonrpc: '2.0',
+  id: 1,
+  method: 'tool',
+  params: {
+    name: 'search-feeds',
+    params: {
+      query: 'technology'
+    }
+  }
+};
+```
 
 ## Use Cases
 
