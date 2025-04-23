@@ -3,7 +3,9 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   transform: {
-    '^.+\\.(ts|tsx)$': 'ts-jest',
+    '^.+\\.(ts|tsx)$': ['ts-jest', {
+      useESM: true,
+    }],
     '^.+\\.(js|jsx)$': 'babel-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
@@ -14,9 +16,5 @@ module.exports = {
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.js$': '$1',
   },
-  globals: {
-    'ts-jest': {
-      useESM: true,
-    },
-  },
+  // ts-jest configuration is now in the transform property
 };
