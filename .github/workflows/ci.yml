@@ -36,7 +36,7 @@ jobs:
         run: npm run build
         
       - name: Test
-        run: npm run test:coverage
+        run: npm run test:ci
         
       - name: Upload coverage reports
         uses: codecov/codecov-action@v4
@@ -44,3 +44,9 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage/lcov.info
           fail_ci_if_error: false
+      
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}

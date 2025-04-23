@@ -16,5 +16,19 @@ module.exports = {
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.js$': '$1',
   },
+  // Add reporters configuration
+  reporters: [
+    'default',
+    ['jest-junit', {
+      outputDirectory: './coverage',
+      outputName: 'junit.xml',
+      classNameTemplate: "{filepath}",
+      titleTemplate: "{title}",
+      ancestorSeparator: " › ",
+      suiteNameTemplate: "{filename}",
+      reportTestSuiteErrors: true
+    }]
+  ],
+  coverageReporters: ['json', 'lcov', 'text', 'clover', 'cobertura'],
   // ts-jest configuration is now in the transform property
 };

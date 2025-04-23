@@ -1,0 +1,9 @@
+{
+  "classNameTemplate": "{filepath}",
+  "titleTemplate": "{title}",
+  "ancestorSeparator": " › ",
+  "suiteNameTemplate": "{filename}",
+  "outputDirectory": "./coverage",
+  "outputName": "junit.xml",
+  "reportTestSuiteErrors": true
+}

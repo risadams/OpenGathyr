@@ -45,6 +45,8 @@ coverage/
 # Temporary files
 tmp/
 temp/
+junit.xml
+*.junit.xml
 
 # Debug files
 debug/
