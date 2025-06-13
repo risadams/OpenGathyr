@@ -144,7 +144,83 @@ Removes an RSS feed from monitoring.
 
 - `feedName`: Name of the feed to remove
 
-## Using the MCP Client
+## Using with VS Code
+
+### GitHub Copilot Integration
+
+To use OpenGathyr with GitHub Copilot in VS Code, you need to configure it as an MCP server in your Copilot settings.
+
+#### Setup Steps
+
+1. **Build the MCP Server:**
+
+   ```bash
+   npm run build
+   ```
+
+2. **Configure Copilot MCP Settings:**
+
+   Create or edit your Copilot configuration file. The location depends on your VS Code setup:
+
+   - **Windows:** `%APPDATA%\Code\User\globalStorage\github.copilot-chat\mcpServers.json`
+   - **macOS:** `~/Library/Application Support/Code/User/globalStorage/github.copilot-chat/mcpServers.json`
+   - **Linux:** `~/.config/Code/User/globalStorage/github.copilot-chat/mcpServers.json`
+
+   Add your OpenGathyr server configuration:
+
+   ```json
+   {
+     "mcpServers": {
+       "opengathyr": {
+         "command": "node",
+         "args": ["dist/index.js"],
+         "cwd": "a:\\OpenGathyr",
+         "env": {
+           "MCP_SERVER_NAME": "opengathyr",
+           "MCP_SERVER_VERSION": "1.0.0",
+           "RSS_FEED_URL_1": "https://news.google.com/rss",
+           "RSS_FEED_URL_2": "https://feeds.bbci.co.uk/news/rss.xml",
+           "RSS_REFRESH_INTERVAL": "300000",
+           "RSS_MAX_ITEMS": "20"
+         }
+       }
+     }
+   }
+   ```
+
+3. **Restart VS Code** to apply the configuration changes.
+
+4. **Verify Connection:**
+
+   Open GitHub Copilot Chat and try using the RSS feed tools:
+
+   ```text
+   @opengathyr list-feeds
+   @opengathyr get-feed news
+   @opengathyr search-feeds "technology"
+   ```
+
+#### Available Commands in Copilot Chat
+
+Once configured, you can use these commands in GitHub Copilot Chat:
+
+- **`@opengathyr list-feeds`** - Lists all configured RSS feeds
+- **`@opengathyr get-feed <feedName>`** - Gets content from a specific feed
+- **`@opengathyr search-feeds <query>`** - Searches across all feeds
+- **`@opengathyr add-feed <name> <url>`** - Adds a new RSS feed
+- **`@opengathyr remove-feed <feedName>`** - Removes a feed
+
+#### Example Usage
+
+```text
+User: @opengathyr search-feeds "artificial intelligence"
+Copilot: I'll search for AI-related content across your RSS feeds...
+
+User: @opengathyr get-feed tech-news
+Copilot: Here's the latest content from the tech-news feed...
+```
+
+### Alternative: Direct MCP Client Usage
 
 OpenGathyr includes a simple MCP client (`src/client/mcp-client.ts`) that can be used to interact with the MCP server for testing purposes.
 
