@@ -45,7 +45,7 @@
     "@typescript-eslint/eslint-plugin": "^8.32.1",
     "@typescript-eslint/parser": "^8.32.1",
     "babel-jest": "^30.0.0",
-    "eslint": "^9.27.0",
+    "eslint": "^9.38.0",
     "globals": "^16.1.0",
     "jest": "^30.0.0",
     "jest-junit": "^16.0.0",
